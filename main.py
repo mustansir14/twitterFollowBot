@@ -1,3 +1,4 @@
+import logging
 import tweepy
 import time
 import os
@@ -5,6 +6,8 @@ import random
 from send_to_me import send_to_me
 from dotenv import load_dotenv
 load_dotenv()
+logging.basicConfig(format='%(asctime)s %(message)s',
+                    datefmt='%m/%d/%Y %H:%M:%S', level=logging.INFO)
 
 
 def main(n=200):
@@ -22,6 +25,7 @@ def main(n=200):
         followed = 0
         for page in range(1, 51):
             try:
+                logging.info(f"Finding users - Page {page}")
                 users = api.search_users(
                     q, page=page)
                 user_ids = list(
@@ -29,16 +33,17 @@ def main(n=200):
                 for user_id in user_ids:
                     try:
                         api.create_friendship(user_id=user_id)
-                    except:
+                    except Exception as e:
+                        logging.error(e)
                         continue
-                    print(f"[twitter-bot] followed: {user_id}")
+                    logging.info(f"[twitter-bot] followed: {user_id}")
                     followed += 1
                     if followed == n:
                         break
                 if followed == n:
                     break
             except Exception as e:
-                print(e)
+                logging.error(e)
                 break
 
         if not user_ids:
@@ -54,7 +59,7 @@ def main(n=200):
             while unfollowed < n and len(followers) > 0:
                 u = random.choice(followers)
                 api.destroy_friendship(user_id=u)
-                print(f"[twitter-bot] unfollowed: {u}")
+                logging.info(f"[twitter-bot] unfollowed: {u}")
                 followers.remove(u)
                 unfollowed += 1
 
@@ -64,7 +69,7 @@ def main(n=200):
                    str(followed) + "\nUnfollowed Today: " + str(unfollowed) + "\nTotal Followings: " + str(len(new_followers)))
     except Exception as e:
         send_to_me("[twitter-bot] ran into an error: " + str(e))
-        print(e)
+        logging.info(e)
 
 
 if __name__ == "__main__":
