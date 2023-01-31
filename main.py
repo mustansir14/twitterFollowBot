@@ -17,7 +17,7 @@ def main(n=200):
         # Get followers first so we don't accidentally unfollow a new follow.
         followers = api.get_friend_ids()
 
-        q = "podcast (#PRPros OR #communications OR #prsa OR #prssa OR #prsaicon OR #publicrelations OR #comms)"
+        q = "podcast OR #PRPros OR #communications OR #prsa OR #prssa OR #prsaicon OR #publicrelations OR #comms"
 
         followed = 0
         for page in range(1, 51):
