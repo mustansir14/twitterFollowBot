@@ -10,7 +10,7 @@ logging.basicConfig(format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %H:%M:%S', level=logging.INFO)
 
 
-def main(n=200):
+def main(n=200, target_followers=600):
     try:
         auth = tweepy.OAuthHandler(
             os.getenv("CONSUMER_KEY"), os.getenv("CONSUMER_SECRET"))
@@ -53,10 +53,12 @@ def main(n=200):
             return
 
         unfollowed = 0
-        if len(followers) + followed >= n*3:
+        target_followers = random.randint(
+            target_followers-10, target_followers)
+        if len(followers) + followed > target_followers:
             # Unfollow some.
-
-            while unfollowed < n and len(followers) > 0:
+            to_unfollow = len(followers) + followed - target_followers
+            while unfollowed < to_unfollow and len(followers) > 0:
                 u = random.choice(followers)
                 api.destroy_friendship(user_id=u)
                 logging.info(f"[twitter-bot] unfollowed: {u}")
@@ -73,4 +75,4 @@ def main(n=200):
 
 
 if __name__ == "__main__":
-    main(200)
+    main(60, 250)
