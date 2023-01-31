@@ -31,6 +31,7 @@ def main(n=200, target_followers=600):
                 user_ids = list(
                     set([user.id for user in users if user.id not in followers]))
                 for user_id in user_ids:
+                    time.sleep(2)
                     try:
                         api.create_friendship(user_id=user_id)
                     except Exception as e:
