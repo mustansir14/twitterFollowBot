@@ -87,4 +87,4 @@ def main(n=200, target_followers=600):
 
 
 if __name__ == "__main__":
-    main(2, 250)
+    main(60, 250)
